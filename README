@@ -1,0 +1,32 @@
+Usage
+==
+
+# insmod cachedump.ko
+# cat /proc/cachedump
+8409153     0           /root
+8409159     2           /root/.viminfo
+1115316     0           /root/cachedump
+1115327     7           /root/cachedump/.cachedump.mod.o.cmd
+1115322     8           /root/cachedump/.cachedump.o.cmd
+1115317     38          /root/cachedump/cachedump.o
+1115320     1           /root/cachedump/cachedump.c
+1115328     1           /root/cachedump/.cachedump.ko.cmd
+1115323     1           /root/cachedump/cachedump.mod.c
+1115325     14          /root/cachedump/cachedump.mod.o
+1115326     50          /root/cachedump/cachedump.ko
+1115319     1           /root/cachedump/Makefile
+1115324     0           /root/cachedump/Module.symvers
+1115318     1           /root/cachedump/modules.order
+13431189    0           /root/cachedump/.tmp_versions
+...
+
+# rmmod cachedump.ko
+
+
+The file displays the inode number, number of (4k) pages held in the cache, and the filename associated withthe inode for all dentries held in the cache. If zero pages are held in the cache that means there is a dentry but no inode.
+
+
+Compiling
+==
+ensure the kernel-devel pacakge is installed then run "make"
+
