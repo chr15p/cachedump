@@ -30,3 +30,9 @@ Compiling
 ==
 ensure the kernel-devel pacakge is installed then run "make"
 
+Bugs
+==
+Many :)
+There is no locking because I'd rather be inaccurate then slow kernel performance
+its only been tested on the 3.10.0-514.21.1.el7.x86_64 kernel
+it will probably crash your kittens and eat your kernel
