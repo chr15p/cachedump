@@ -1,31 +1,19 @@
 /*  
- *  hello-1.c - The simplest kernel module.
+ *  cachedump.c - A simple kernel module to display the contents of the page cache
  */
 
 #include <linux/module.h>	/* Needed by all modules */
 #include <linux/kernel.h>	/* Needed for KERN_INFO */
 #include <linux/init.h>		/* Needed for the macros */
-//#include <linux/sched.h>
-//#include <linux/sched/signal.h>
 #include <linux/proc_fs.h>    /** This is for procfs **/
 #include <linux/fs.h> 
 #include <linux/seq_file.h>
 #include <linux/sched.h>
-#include <linux/nsproxy.h>
-
-#include <linux/mnt_namespace.h>
-//#include <linux/mount.h>
-//#include <linux/fs.h>
 #include <linux/fs_struct.h>
 #include <linux/dcache.h>
 #include <linux/slab.h>
 
 
-
-//static int pagetypeinfo_open(struct inode *inode, struct file *file)
-//{
-//       return seq_open(file, &pagetypeinfo_op);
-//}
 
 void showChildren(char* path,struct seq_file *m,struct dentry *rootdentry)
 {
@@ -95,18 +83,14 @@ static int __init proc_init(void)
 {
 	struct proc_dir_entry *procfile;
 
-
-	printk(KERN_INFO "Hello, procmod\n");
-
-	procfile=proc_create("chrisp", S_IRUGO, NULL,&basic_proc_fops);
+	procfile=proc_create("cachedump", S_IRUGO, NULL,&basic_proc_fops);
 
 	return 0;
 }
 
 static void __exit proc_exit(void)
 {
-	remove_proc_entry("chrisp",NULL);
-	printk(KERN_INFO "Goodbye procmod\n");
+	remove_proc_entry("cachedump",NULL);
 }
 
 
