@@ -30,14 +30,14 @@ void showChildren(char* path,struct seq_file *m,struct dentry *rootdentry)
                         }
 
 
-			mypath =(char*) kmalloc(strlen(path)+strlen(child->d_iname)+2,GFP_KERNEL);
+			mypath =(char*) kmalloc(strlen(path)+strlen(child->d_name.name)+2,GFP_KERNEL);
 			memset(mypath,0,strlen(path)+strlen(child->d_iname)+2);
 			strcpy(mypath,path);
 			////add trailing slash if needed
 			if(*(path+strlen(path)-1)!='/'){
 				strcat(mypath,"/");
 			}
-			strcat(mypath,child->d_iname);
+			strcat(mypath,child->d_name.name);
 			
         		seq_printf(m,"%s\n",mypath);
 
