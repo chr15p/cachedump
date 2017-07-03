@@ -22,6 +22,8 @@ void showChildren(char* path,struct seq_file *m,struct dentry *rootdentry)
 
 	list_for_each_entry(child, &(rootdentry)->d_subdirs, d_u.d_child) {
        		if(child->d_inode != NULL){
+			int length;
+
         		seq_printf(m,"%-12lu", child->d_inode->i_ino);
                         if(child->d_inode->i_mapping!=NULL){
        	                        seq_printf(m,"%-12lu",child->d_inode->i_mapping->nrpages);
@@ -30,9 +32,12 @@ void showChildren(char* path,struct seq_file *m,struct dentry *rootdentry)
                         }
 
 
-			mypath =(char*) kmalloc(strlen(path)+strlen(child->d_name.name)+2,GFP_KERNEL);
-			memset(mypath,0,strlen(path)+strlen(child->d_iname)+2);
+			length=strlen(path)+strlen(child->d_name.name)+2;
+			mypath = (char*) kmalloc(length,GFP_KERNEL);
+			memset(mypath,0,length);
+
 			strcpy(mypath,path);
+
 			////add trailing slash if needed
 			if(*(path+strlen(path)-1)!='/'){
 				strcat(mypath,"/");
