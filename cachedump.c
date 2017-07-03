@@ -12,6 +12,8 @@
 #include <linux/fs_struct.h>
 #include <linux/dcache.h>
 #include <linux/slab.h>
+#include <linux/radix-tree.h>
+#include <linux/page-flags.h>
 
 
 
@@ -19,17 +21,30 @@ void showChildren(char* path,struct seq_file *m,struct dentry *rootdentry)
 {
 	struct dentry *child;
 	char * mypath;
+    struct radix_tree_iter iter;
+    void **slot;
 
 	list_for_each_entry(child, &(rootdentry)->d_subdirs, d_u.d_child) {
-       		if(child->d_inode != NULL){
-			int length;
+        if(child->d_inode != NULL){
+            unsigned long length;
+            unsigned long active=0;
+            unsigned long inactive=0;
 
-        		seq_printf(m,"%-12lu", child->d_inode->i_ino);
-                        if(child->d_inode->i_mapping!=NULL){
-       	                        seq_printf(m,"%-12lu",child->d_inode->i_mapping->nrpages);
-               	        }else{  
-                       	        seq_printf(m,"%-12d",0);
-                        }
+            seq_printf(m,"%-12lu", child->d_inode->i_ino);
+            if(child->d_inode->i_mapping!=NULL){
+                seq_printf(m,"%-12lu",child->d_inode->i_mapping->nrpages);
+            }else{  
+                seq_printf(m,"%-12d",0);
+            }
+
+            radix_tree_for_each_slot(slot, &(child->d_inode->i_mapping->page_tree), &iter, 0) {
+                if(PageActive((struct page *)slot)){
+                    active++;
+                }else{
+                    inactive++;
+                }
+            }
+            seq_printf(m,"%-12lu%-12lu",active,inactive);
 
 
 			length=strlen(path)+strlen(child->d_name.name)+2;

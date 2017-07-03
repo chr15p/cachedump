@@ -3,27 +3,26 @@ Usage
 
 # insmod cachedump.ko
 # cat /proc/cachedump
-8409153     0           /root
-8409159     2           /root/.viminfo
-1115316     0           /root/cachedump
-1115327     7           /root/cachedump/.cachedump.mod.o.cmd
-1115322     8           /root/cachedump/.cachedump.o.cmd
-1115317     38          /root/cachedump/cachedump.o
-1115320     1           /root/cachedump/cachedump.c
-1115328     1           /root/cachedump/.cachedump.ko.cmd
-1115323     1           /root/cachedump/cachedump.mod.c
-1115325     14          /root/cachedump/cachedump.mod.o
-1115326     50          /root/cachedump/cachedump.ko
-1115319     1           /root/cachedump/Makefile
-1115324     0           /root/cachedump/Module.symvers
-1115318     1           /root/cachedump/modules.order
-13431189    0           /root/cachedump/.tmp_versions
+8409153     0           0           0           /root
+9660082     2           1           1           /root/.viminfo
+9660049     0           0           0           /root/cachedump
+9660081     7           3           4           /root/cachedump/.cachedump.mod.o.cmd
+9660079     9           3           6           /root/cachedump/.cachedump.o.cmd
+9660074     39          20          19          /root/cachedump/cachedump.o
+9660083     1           0           1           /root/cachedump/cachedump.c
+9660080     1           1           0           /root/cachedump/.cachedump.ko.cmd
+9660075     1           1           0           /root/cachedump/cachedump.mod.c
+9660076     0           0           0           /root/cachedump/Module.symvers
+9660057     14          10          4           /root/cachedump/cachedump.mod.o
+9660072     51          27          24          /root/cachedump/cachedump.ko
+9660073     1           1           0           /root/cachedump/modules.order
+
 ...
 
 # rmmod cachedump.ko
 
 
-The file displays the inode number, number of (4k) pages held in the cache, and the filename associated withthe inode for all dentries held in the cache. If zero pages are held in the cache that means there is a dentry but no inode.
+The file displays the inode number, total number of (4k) pages held in the cache, number of active pages, number of inactive pages, and the filename associated withthe inode for all dentries held in the cache. If zero pages are held in the cache that means there is a dentry but no inode.
 
 
 Compiling
@@ -33,6 +32,6 @@ ensure the kernel-devel pacakge is installed then run "make"
 Bugs
 ==
 Many :)
-There is no locking because I'd rather be inaccurate then slow kernel performance
+There is no locking done, I'd rather be inaccurate then slow kernel performance but this may be dangerous if a page is freed part way through us looking at it
 its only been tested on the 3.10.0-514.21.1.el7.x86_64 kernel
 it will probably crash your kittens and eat your kernel
