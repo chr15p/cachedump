@@ -28,7 +28,7 @@ void showChildren(char* path,struct seq_file *m,struct dentry *rootdentry)
                         if(child->d_inode->i_mapping!=NULL){
        	                        seq_printf(m,"%-12lu",child->d_inode->i_mapping->nrpages);
                	        }else{  
-                       	        seq_printf(m,"0           ");
+                       	        seq_printf(m,"%-12d",0);
                         }
 
 
