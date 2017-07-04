@@ -5,7 +5,7 @@
 #include <linux/module.h>	/* Needed by all modules */
 #include <linux/kernel.h>	/* Needed for KERN_INFO */
 #include <linux/init.h>		/* Needed for the macros */
-#include <linux/proc_fs.h>    /** This is for procfs **/
+#include <linux/proc_fs.h>	/** This is for procfs **/
 #include <linux/fs.h> 
 #include <linux/seq_file.h>
 #include <linux/sched.h>
@@ -17,51 +17,51 @@
 
 
 
-void showChildren(char* path,struct seq_file *m,struct dentry *rootdentry)
+void showChildren(char *path, struct seq_file *m, struct dentry *rootdentry)
 {
 	struct dentry *child;
-	char * mypath;
-    struct radix_tree_iter iter;
-    void **slot;
+	char *mypath;
+	struct radix_tree_iter iter;
+	void **slot;
 
 	list_for_each_entry(child, &(rootdentry)->d_subdirs, d_u.d_child) {
-        if(child->d_inode != NULL){
-            unsigned long length;
-            unsigned long active=0;
-            unsigned long inactive=0;
+		if (child->d_inode != NULL) {
+			unsigned long length;
+			unsigned long active = 0;
+			unsigned long inactive = 0;
 
-            seq_printf(m,"%-12lu", child->d_inode->i_ino);
-            if(child->d_inode->i_mapping!=NULL){
-                seq_printf(m,"%-12lu",child->d_inode->i_mapping->nrpages);
-            }else{  
-                seq_printf(m,"%-12d",0);
-            }
+			seq_printf(m, "%-12lu", child->d_inode->i_ino);
+			if (child->d_inode->i_mapping != NULL) {
+				seq_printf(m, "%-12lu", child->d_inode->i_mapping->nrpages);
+			} else {  
+				seq_printf(m, "%-12d", 0);
+			}
 
-            radix_tree_for_each_slot(slot, &(child->d_inode->i_mapping->page_tree), &iter, 0) {
-                if(PageActive((struct page *)slot)){
-                    active++;
-                }else{
-                    inactive++;
-                }
-            }
-            seq_printf(m,"%-12lu%-12lu",active,inactive);
+			radix_tree_for_each_slot(slot, &(child->d_inode->i_mapping->page_tree), &iter, 0) {
+				if (PageActive((struct page *)slot)) {
+					active++;
+				} else {
+					inactive++;
+				}
+			}
+			seq_printf(m, "%-12lu%-12lu", active, inactive);
 
 
-			length=strlen(path)+strlen(child->d_name.name)+2;
-			mypath = (char*) kmalloc(length,GFP_KERNEL);
-			memset(mypath,0,length);
+			length = strlen(path) + strlen(child->d_name.name)+2;
+			mypath = (char*) kmalloc(length, GFP_KERNEL);
+			memset(mypath, 0, length);
 
-			strcpy(mypath,path);
+			strcpy(mypath, path);
 
 			////add trailing slash if needed
-			if(*(path+strlen(path)-1)!='/'){
-				strcat(mypath,"/");
+			if (*(path+strlen(path)-1) != '/') {
+				strcat(mypath, "/");
 			}
-			strcat(mypath,child->d_name.name);
-			
-        		seq_printf(m,"%s\n",mypath);
+			strcat(mypath, child->d_name.name);
 
-			showChildren(mypath,m,child);
+			seq_printf(m, "%s\n", mypath);
+
+			showChildren(mypath, m, child);
 			kfree(mypath);
 		}
 	}
@@ -77,7 +77,7 @@ static int basicProcShow(struct seq_file *m, void *v)
 	get_fs_root(current->fs, &root);
 	rootdentry = root.dentry;
 
-	showChildren("/",m,rootdentry);
+	showChildren("/", m, rootdentry);
 
 	return 0;
 }
@@ -85,7 +85,7 @@ static int basicProcShow(struct seq_file *m, void *v)
 
 static int basicProcOpen(struct inode *inode, struct file *file)
 {
-	return single_open(file,basicProcShow,(void*)inode);
+	return single_open(file, basicProcShow, (void*)inode);
 }
 
 
@@ -103,14 +103,14 @@ static int __init proc_init(void)
 {
 	struct proc_dir_entry *procfile;
 
-	procfile=proc_create("cachedump", S_IRUGO, NULL,&basic_proc_fops);
+	procfile = proc_create("cachedump", S_IRUGO, NULL, &basic_proc_fops);
 
 	return 0;
 }
 
 static void __exit proc_exit(void)
 {
-	remove_proc_entry("cachedump",NULL);
+	remove_proc_entry("cachedump", NULL);
 }
 
 
