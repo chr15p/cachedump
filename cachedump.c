@@ -16,7 +16,6 @@
 #include <linux/page-flags.h>
 
 
-
 void showChildren(char *path, struct seq_file *m, struct dentry *rootdentry)
 {
 	struct dentry *child;
@@ -24,7 +23,8 @@ void showChildren(char *path, struct seq_file *m, struct dentry *rootdentry)
 	struct radix_tree_iter iter;
 	void **slot;
 
-	list_for_each_entry(child, &(rootdentry)->d_subdirs, d_u.d_child) {
+	//list_for_each_entry(child, &(rootdentry)->d_subdirs, d_u.d_child) {
+	list_for_each_entry(child, &(rootdentry)->d_subdirs, d_u.d_rcu) {
 		unsigned long length;
 		unsigned long active = 0;
 		unsigned long inactive = 0;
@@ -40,7 +40,8 @@ void showChildren(char *path, struct seq_file *m, struct dentry *rootdentry)
 			seq_printf(m, "%-12d", 0);
 		}
 
-		radix_tree_for_each_slot(slot, &(child->d_inode->i_mapping->page_tree), &iter, 0) {
+		//radix_tree_for_each_slot(slot, &(child->d_inode->i_mapping->page_tree), &iter, 0) {
+		radix_tree_for_each_slot(slot, &(child->d_inode->i_mapping->i_pages), &iter, 0) {
 			if (PageActive((struct page *)slot)) {
 				active++;
 			} else {
