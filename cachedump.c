@@ -24,7 +24,7 @@ void showChildren(char *path, struct seq_file *m, struct dentry *rootdentry)
 	void **slot;
 
 	//list_for_each_entry(child, &(rootdentry)->d_subdirs, d_u.d_child) {
-	list_for_each_entry(child, &(rootdentry)->d_subdirs, d_u.d_rcu) {
+	list_for_each_entry(child, &(rootdentry)->d_subdirs, d_child) {
 		unsigned long length;
 		unsigned long active = 0;
 		unsigned long inactive = 0;
